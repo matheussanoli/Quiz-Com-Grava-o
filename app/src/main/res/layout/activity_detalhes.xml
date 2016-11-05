@@ -47,6 +47,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginBottom="35dp"
             android:text="P1: [Nota]"
+            android:onClick="isRbSelected"
             android:id="@+id/rbP1"/>
 
         <RadioButton
@@ -56,6 +57,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginBottom="35dp"
             android:text="P2: [Nota]"
+            android:onClick="isRbSelected"
             android:id="@+id/rbP2"/>
 
         <RadioButton
@@ -64,6 +66,7 @@
             android:layout_marginLeft="15dp"
             android:textSize="25dp"
             android:text="TP: [Nota]"
+            android:onClick="isRbSelected"
             android:id="@+id/rbTP"/>
 
     </RadioGroup>
@@ -103,9 +106,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Inserir Nota"
                 android:enabled="false"
-                android:onClick="inserirNota"/>
+                android:text="Inserir Nota"
+                android:onClick="inserirNota"
+                android:id="@+id/btnInserirNota"/>
 
         </RelativeLayout>
 
