@@ -2,7 +2,9 @@ package br.com.fatecpg.quiz_com_gravacao;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -11,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.content.Context;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class DetalhesActivity extends AppCompatActivity {
@@ -19,6 +23,12 @@ public class DetalhesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        carregaDetallhes("Matematica");
     }
 
     public RadioButton rbSelected(){
@@ -36,15 +46,33 @@ public class DetalhesActivity extends AppCompatActivity {
         }
     }
 
-    public void carregaDetallhes(){
+    public void setRbText(int rbId, float nota){
+        RadioButton rb = (RadioButton) findViewById(rbId);
+        rb.setText(rb.getText().toString().substring(0,3)+" "+String.format("%,.2f", nota));
+    }
+
+    public String getNomeDisciplina(){
+        TextView tvDisciplina = (TextView) findViewById(R.id.tvDiciplina);
+        return tvDisciplina.getText().toString();
+    }
+
+    public void carregaDetallhes(String nomeDisciplina){
+        SharedPreferences pref = this.getSharedPreferences("br.com.fatecpg.quiz", Context.MODE_PRIVATE);
+
+        TextView tv = (TextView) findViewById(R.id.tvDiciplina);
+        tv.setText(this.getIntent().getStringExtra("Disciplina"));
+        setRbText(R.id.rbP1,pref.getFloat(getNomeDisciplina()+"_P1", 0));
+        setRbText(R.id.rbP2,pref.getFloat(getNomeDisciplina()+"_P2", 0));
+        setRbText(R.id.rbTP,pref.getFloat(getNomeDisciplina()+"_TP", 0));
 
     }
 
-    public void abrePopup(String tipoNome){
+    public void abrePopup(final String tipoNota){
+        final TextView tvDisciplina = (TextView) findViewById(R.id.tvDiciplina);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
         // set title
-        alertDialogBuilder.setTitle(tipoNome);
+        alertDialogBuilder.setTitle(tipoNota);
 
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -55,7 +83,7 @@ public class DetalhesActivity extends AppCompatActivity {
                 .setView(input)
                 .setPositiveButton("Salvar",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        salvar(input.getText().toString());
+                        salvar(tvDisciplina.getText().toString() , tipoNota, input.getText().toString());
                         dialog.cancel();
                     }
                 })
@@ -74,11 +102,15 @@ public class DetalhesActivity extends AppCompatActivity {
     }
 
     public void inserirNota(View view){
+
         abrePopup(rbSelected().getText().toString().substring(0,2));
     }
 
-    public void salvar(String txt){
-        Toast.makeText(this, "Nota: " + txt, Toast.LENGTH_LONG).show();
+    public void salvar(String nomeDisciplina, String tipoNota,String nota){
+        SharedPreferences pref = this.getSharedPreferences("br.com.fatecpg.quiz", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putFloat(nomeDisciplina+"_"+tipoNota, Float.parseFloat(nota.replace(",", ".")));
+        editor.commit();
     }
 
     public void voltar(View view){
