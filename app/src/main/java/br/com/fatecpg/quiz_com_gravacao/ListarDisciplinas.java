@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-public class ListarDisciplinas extends AppCompatActivity {
+public class    ListarDisciplinas extends AppCompatActivity {
     File[] dirFiles;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +33,10 @@ public class ListarDisciplinas extends AppCompatActivity {
             }
         }
 
-        ArrayAdapter<String> aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, files);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, files);
 
         ListView list = (ListView)findViewById(R.id.disciplinas);
-        list.setAdapter(aa);
+        list.setAdapter(adapter2);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -68,7 +68,7 @@ public class ListarDisciplinas extends AppCompatActivity {
         alertDialogBuilder.setTitle(tipoNome);
 
         final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        input.setInputType(InputType.TYPE_CLASS_TEXT );
         // set dialog message
         alertDialogBuilder
                 .setMessage("Digite a Disciplina:")

@@ -11,15 +11,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="br.com.fatecpg.quiz_com_gravacao.ListarDisciplinas">
 
+
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/disciplinas">
+    </ListView>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cadastrar Disciplina"
         android:onClick="cadDisciplina"/>
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/disciplinas">
-    </ListView>
 </LinearLayout>
