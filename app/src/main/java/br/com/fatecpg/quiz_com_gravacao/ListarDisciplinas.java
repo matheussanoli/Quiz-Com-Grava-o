@@ -75,7 +75,7 @@ public class ListarDisciplinas extends AppCompatActivity {
         input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
         // set dialog message
         alertDialogBuilder
-                .setMessage("Digite a nota:")
+                .setMessage("Digite a Disciplina:")
                 .setCancelable(false)
                 .setView(input)
                 .setPositiveButton("Salvar",new DialogInterface.OnClickListener() {
