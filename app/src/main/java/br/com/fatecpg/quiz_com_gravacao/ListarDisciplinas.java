@@ -1,6 +1,7 @@
 package br.com.fatecpg.quiz_com_gravacao;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -62,14 +63,9 @@ public class ListarDisciplinas extends AppCompatActivity {
     }
 
     public void cadDisciplina(final String tipoNome){
-
-
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-
-        // set title
         alertDialogBuilder.setTitle(tipoNome);
-
 
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -80,30 +76,25 @@ public class ListarDisciplinas extends AppCompatActivity {
                 .setView(input)
                 .setPositiveButton("Salvar",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        salvar(input.getText().toString());
+                        salvarDisciplina(input.getText().toString());
                         dialog.cancel();
                     }
                 })
                 .setNegativeButton("Cancelar",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
-                        // if this button is clicked, just close
-                        // the dialog box and do nothing
                         dialog.cancel();
                     }
                 });
-
-
         // show it
         alertDialogBuilder.show();
-
-
-
-
     }
 
 
     public void salvarDisciplina(String disciplina){
-
+        SharedPreferences sharedPreferences = getSharedPreferences("MY_SHARED_PREF", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(disciplina, "");
+        editor.commit();
     }
 
     public void carregaDisciplina(){
