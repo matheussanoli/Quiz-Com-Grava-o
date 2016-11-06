@@ -1,9 +1,10 @@
 package br.com.fatecpg.quiz_com_gravacao;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
@@ -40,8 +41,6 @@ public class DetalhesActivity extends AppCompatActivity {
     }
 
     public void abrePopup(String tipoNome){
-
-
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
         // set title
@@ -80,6 +79,11 @@ public class DetalhesActivity extends AppCompatActivity {
 
     public void salvar(String txt){
         Toast.makeText(this, "Nota: " + txt, Toast.LENGTH_LONG).show();
+    }
+
+    public void voltar(View view){
+        Intent i = new Intent(DetalhesActivity.this, ListarDisciplinas.class);
+        startActivity(i);
     }
 
 }
