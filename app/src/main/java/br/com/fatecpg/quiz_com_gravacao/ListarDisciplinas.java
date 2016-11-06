@@ -80,7 +80,7 @@ public class ListarDisciplinas extends AppCompatActivity {
                 .setView(input)
                 .setPositiveButton("Salvar",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        salvar(input.getText().toString());
+                        salvarDisciplina(input.getText().toString());
                         dialog.cancel();
                     }
                 })
