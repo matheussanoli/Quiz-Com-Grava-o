@@ -72,7 +72,7 @@ public class ListarDisciplinas extends AppCompatActivity {
 
 
         final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        input.setInputType(InputType.TYPE_CLASS_TEXT );
         // set dialog message
         alertDialogBuilder
                 .setMessage("Digite a Disciplina:")
