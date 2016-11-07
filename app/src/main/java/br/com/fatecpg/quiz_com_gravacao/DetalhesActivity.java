@@ -23,6 +23,11 @@ public class DetalhesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes);
+
+        TextView tvDisciplina = (TextView) findViewById(R.id.tvDiciplina);
+        Intent i = getIntent();
+        String nome = i.getStringExtra("nome");
+        tvDisciplina.setText(nome);
     }
 
     @Override
@@ -53,12 +58,9 @@ public class DetalhesActivity extends AppCompatActivity {
 
     public String getNomeDisciplina(){
         TextView tvDisciplina = (TextView) findViewById(R.id.tvDiciplina);
-
-        Intent it = getIntent();
-        Bundle bundle = it.getExtras();
-        String nome = bundle.getString("nome");
+        Intent i = getIntent();
+        String nome = i.getStringExtra("nome");
         tvDisciplina.setText(nome);
-
         return tvDisciplina.getText().toString();
     }
 
@@ -128,7 +130,6 @@ public class DetalhesActivity extends AppCompatActivity {
         SharedPreferences pref = this.getSharedPreferences("br.com.fatecpg.quiz", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.remove("");
-
     }
 
     public void voltar(View view){

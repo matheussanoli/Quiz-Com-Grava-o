@@ -3,24 +3,23 @@ package br.com.fatecpg.quiz_com_gravacao;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class    ListarDisciplinas extends AppCompatActivity {
     File[] dirFiles;
@@ -31,26 +30,17 @@ public class    ListarDisciplinas extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listar_disciplina);
 
-        String disciplina = "";
-        listViews(disciplina);
-
-        botaoCadastro();
-
-        }
-
-    public void listViews(final String disciplina) {
-        ListView list = (ListView) findViewById(R.id.disciplinas);
-
         ArrayList<String> files = new ArrayList<>();
         File dir = getFilesDir();
         dirFiles = dir.listFiles();
         for (int i = 0; i < dirFiles.length; i++) {
             if(!dirFiles[i].isDirectory()) {
-              files.add(dirFiles[i].getName());
+                files.add(dirFiles[i].getName());
             }
         }
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItens);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItens);
+        ListView list = (ListView) findViewById(R.id.disciplinas);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -64,7 +54,6 @@ public class    ListarDisciplinas extends AppCompatActivity {
                     String line;
                     while ((line = in.readLine()) != null) {
                         text.append(line);
-                        Log.i("Test", "text : "+text+" : end");
                         text.append('\n');
                     }
                     in.close();
@@ -72,18 +61,39 @@ public class    ListarDisciplinas extends AppCompatActivity {
                 }catch(Exception ex){
                     fileDialog.setMessage("Erro ao carregar arquivo: "+ex.getLocalizedMessage());
                 }
+                fileDialog.setNeutralButton("Fechar", null);
+                fileDialog.show();
 
-                Intent intent = new Intent(ListarDisciplinas.this, DetalhesActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("nome", disciplina);
-                intent.putExtras(bundle);
+                Intent intent = new Intent(getApplicationContext(), DetalhesActivity.class);
+                intent.putExtra("file", i);
                 startActivity(intent);
             }
         });
+
+        iniciarCadastro();
+
     }
 
-    public void botaoCadastro() {
-        final Button cadDisciplina = (Button) findViewById(R.id.cadDisciplina);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ArrayList<String> files = new ArrayList<>();
+        File dir = getFilesDir();
+        dirFiles = dir.listFiles();
+        for (int i = 0; i < dirFiles.length; i++) {
+            if(!dirFiles[i].isDirectory()) {
+                files.add(dirFiles[i].getName());
+            }
+        }
+        ArrayAdapter<String> aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, files);
+        ListView list = (ListView)findViewById(R.id.disciplinas);
+        list.setAdapter(aa);
+    }
+
+
+
+    public void iniciarCadastro() {
+        Button cadDisciplina = (Button) findViewById(R.id.cadDisciplina);
         cadDisciplina.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,7 +101,6 @@ public class    ListarDisciplinas extends AppCompatActivity {
             }
         });
     }
-
 
     public void cadDisciplina(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -121,11 +130,27 @@ public class    ListarDisciplinas extends AppCompatActivity {
     }
 
     public void salvarDisciplina(String disciplina){
-        Collections.addAll(listItens, disciplina);
+        Disciplina disc = new Disciplina();
 
-        SharedPreferences pref = this.getSharedPreferences("br.com.fatecpg.quiz", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString("nomeDisciplina", disciplina);
-        editor.commit();
+        try{
+            disc.nome = String.valueOf(disciplina);
+        }catch(Exception e){
+
+        }
+
+        String filename = disc.nome;
+        FileOutputStream output;
+
+        try{
+            output = openFileOutput(filename, Context.MODE_PRIVATE);
+            output.write(("Nome da disciplina: " + disc.nome + "\n").getBytes());
+            output.close();
+        }catch(Exception ex){
+            Toast.makeText(this,"Erro ao gravar arquivo: " + ex.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+        }
+
+        Intent i = new Intent(getApplicationContext(), DetalhesActivity.class);
+        i.putExtra("nome", filename);
+        startActivity(i);
     }
 }
