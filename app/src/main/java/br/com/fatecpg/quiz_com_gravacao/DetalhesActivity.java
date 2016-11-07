@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 public class DetalhesActivity extends AppCompatActivity {
 
+    private float media = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +113,19 @@ public class DetalhesActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = pref.edit();
         editor.putFloat(nomeDisciplina+"_"+tipoNota, Float.parseFloat(nota.replace(",", ".")));
         editor.commit();
+    }
+
+    public float calcular(float add, float remover){
+        if(media != 0 ){
+            media = (media - remover) + add;
+        }
+        return media;
+    }
+
+    public void excluirDisciplina(View view){
+        SharedPreferences pref = this.getSharedPreferences("br.com.fatecpg.quiz", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.remove("");
     }
 
     public void voltar(View view){
