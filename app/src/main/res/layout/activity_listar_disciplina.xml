@@ -14,12 +14,6 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/detalhes"
-        android:text="Detalhes"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="Cadastrar Disciplina"
         android:id="@+id/cadDisciplina"
         android:onClick="cadDisciplina"/>

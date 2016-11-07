@@ -30,43 +30,7 @@ public class    ListarDisciplinas extends AppCompatActivity {
 
         String disciplina = "";
         setupViews(disciplina);
-       /* ArrayList<String> files = new ArrayList<>();
-        File dir = getFilesDir();
-        dirFiles = dir.listFiles();
-        for (int i = 0; i < dirFiles.length; i++) {
-            if (!dirFiles[i].isDirectory()) {
-                files.add(dirFiles[i].getName());
-            }*/
         }
-
-
-/*
-        ListView list = (ListView) findViewById(R.id.disciplinas);
-        list.setAdapter(adapter2);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String filename = ListarDisciplinas.this.dirFiles[i].getName();
-                AlertDialog.Builder fileDialog = new AlertDialog.Builder(ListarDisciplinas.this);
-                fileDialog.setTitle(filename);
-                try {
-                    BufferedReader in = new BufferedReader(new FileReader(ListarDisciplinas.this.dirFiles[i]));
-                    StringBuilder text = new StringBuilder();
-                    String line;
-                    while ((line = in.readLine()) != null) {
-                        text.append(line);
-                        text.append('\n');
-                    }
-                    in.close();
-                    fileDialog.setMessage(text);
-                } catch (Exception ex) {
-                    fileDialog.setMessage("Erro ao carregar arquivo: " + ex.getLocalizedMessage());
-                }
-                fileDialog.setNeutralButton("Fechar", null);
-                fileDialog.show();
-            }
-        });
-    }*/
 
     public void setupViews(final String disciplina) {
         ListView list = (ListView) findViewById(R.id.disciplinas);
@@ -83,14 +47,6 @@ public class    ListarDisciplinas extends AppCompatActivity {
             cadDisciplina();
         }
     });
-
-       detalhes.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick (View view){
-                Intent i = new Intent(ListarDisciplinas.this, DetalhesActivity.class);
-                startActivity(i);
-            }
-        });
 
      list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
          @Override
