@@ -104,7 +104,6 @@ public class DetalhesActivity extends AppCompatActivity {
         // show it
         alertDialogBuilder.show();
 
-
     }
 
     public void inserirNota(View view){
@@ -129,6 +128,7 @@ public class DetalhesActivity extends AppCompatActivity {
         SharedPreferences pref = this.getSharedPreferences("br.com.fatecpg.quiz", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.remove("");
+
     }
 
     public void voltar(View view){
