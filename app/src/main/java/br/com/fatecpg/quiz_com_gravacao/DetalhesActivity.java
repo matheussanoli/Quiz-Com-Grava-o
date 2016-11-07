@@ -1,10 +1,10 @@
 package br.com.fatecpg.quiz_com_gravacao;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -13,9 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.content.Context;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class DetalhesActivity extends AppCompatActivity {
 
@@ -53,6 +51,12 @@ public class DetalhesActivity extends AppCompatActivity {
 
     public String getNomeDisciplina(){
         TextView tvDisciplina = (TextView) findViewById(R.id.tvDiciplina);
+
+        Intent it = getIntent();
+        Bundle bundle = it.getExtras();
+        String nome = bundle.getString("nome");
+        tvDisciplina.setText(nome);
+
         return tvDisciplina.getText().toString();
     }
 
@@ -102,7 +106,6 @@ public class DetalhesActivity extends AppCompatActivity {
     }
 
     public void inserirNota(View view){
-
         abrePopup(rbSelected().getText().toString().substring(0,2));
     }
 
