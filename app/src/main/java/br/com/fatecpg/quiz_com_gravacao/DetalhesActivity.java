@@ -14,26 +14,32 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.util.ArrayList;
 
 public class DetalhesActivity extends AppCompatActivity {
 
     private float media = 0;
-
+    File[] dirFiles;
+    String filename;
+    int i=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes);
 
-        TextView tvDisciplina = (TextView) findViewById(R.id.tvDiciplina);
-        Intent i = getIntent();
-        String nome = i.getStringExtra("nome");
-        tvDisciplina.setText(nome);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        carregaDetallhes("Matematica");
+        carregaDetallhes();
     }
 
     public RadioButton rbSelected(){
@@ -51,9 +57,9 @@ public class DetalhesActivity extends AppCompatActivity {
         }
     }
 
-    public void setRbText(int rbId, float nota){
+    public void setRbText(int rbId, String nota){
         RadioButton rb = (RadioButton) findViewById(rbId);
-        rb.setText(rb.getText().toString().substring(0,3)+" "+String.format("%,.2f", nota));
+        rb.setText(nota);
     }
 
     public String getNomeDisciplina(){
@@ -64,15 +70,43 @@ public class DetalhesActivity extends AppCompatActivity {
         return tvDisciplina.getText().toString();
     }
 
-    public void carregaDetallhes(String nomeDisciplina){
-        SharedPreferences pref = this.getSharedPreferences("br.com.fatecpg.quiz", Context.MODE_PRIVATE);
+    public void carregaDetallhes(){
+        ArrayList<String> files = new ArrayList<>();
+        File dir = getFilesDir();
+        dirFiles = dir.listFiles();
 
-        TextView tv = (TextView) findViewById(R.id.tvDiciplina);
-        tv.setText(this.getIntent().getStringExtra("Disciplina"));
+        TextView tvDisciplina = (TextView) findViewById(R.id.tvDiciplina);
+        Intent intent = getIntent();
+        i = intent.getIntExtra("file",0);
+        filename =dirFiles[i].getName();
+        tvDisciplina.setText(filename);
+
+        try {
+            BufferedReader lerArq = new BufferedReader(new FileReader(dirFiles[i]));
+            String line;
+            while ((line = lerArq.readLine()) != null) {
+                Toast.makeText(this, "li: "+ line, Toast.LENGTH_LONG).show();
+
+                if(line.substring(0,2).equals("P1")){
+                    setRbText(R.id.rbP1, line);
+                }
+                else if(line.substring(0,2).equals("P2")){
+                    setRbText(R.id.rbP2, line);
+                }
+                else if(line.substring(0,2).equals("TP")){
+                    setRbText(R.id.rbTP, line);
+                }
+            }
+            lerArq.close();
+        }catch (Exception ex){
+
+        }
+
+        /*
         setRbText(R.id.rbP1,pref.getFloat(getNomeDisciplina()+"_P1", 0));
         setRbText(R.id.rbP2,pref.getFloat(getNomeDisciplina()+"_P2", 0));
         setRbText(R.id.rbTP,pref.getFloat(getNomeDisciplina()+"_TP", 0));
-
+*/
     }
 
     public void abrePopup(final String tipoNota){
@@ -113,10 +147,24 @@ public class DetalhesActivity extends AppCompatActivity {
     }
 
     public void salvar(String nomeDisciplina, String tipoNota,String nota){
-        SharedPreferences pref = this.getSharedPreferences("br.com.fatecpg.quiz", Context.MODE_PRIVATE);
+        /*SharedPreferences pref = this.getSharedPreferences("br.com.fatecpg.quiz", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putFloat(nomeDisciplina+"_"+tipoNota, Float.parseFloat(nota.replace(",", ".")));
         editor.commit();
+        */
+        FileOutputStream output;
+
+        try{
+            output = openFileOutput(filename, Context.MODE_PRIVATE);
+
+
+            output.write((tipoNota+": " + nota + "\n").getBytes());
+
+            output.close();
+            carregaDetallhes();
+        }catch(Exception ex){
+            Toast.makeText(this,"Erro ao gravar arquivo: " + ex.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+        }
     }
 
     public float calcular(float add, float remover){

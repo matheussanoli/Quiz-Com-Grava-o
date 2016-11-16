@@ -33,7 +33,7 @@ public class    ListarDisciplinas extends AppCompatActivity {
         ArrayList<String> files = new ArrayList<>();
         File dir = getFilesDir();
         dirFiles = dir.listFiles();
-        for (int i = 0; i < dirFiles.length; i++) {
+        for (int i = 1; i < dirFiles.length; i++) {
             if(!dirFiles[i].isDirectory()) {
                 files.add(dirFiles[i].getName());
             }
@@ -45,25 +45,7 @@ public class    ListarDisciplinas extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String filename = ListarDisciplinas.this.dirFiles[i].getName();
-                AlertDialog.Builder fileDialog = new AlertDialog.Builder(ListarDisciplinas.this);
-                fileDialog.setTitle(filename);
-                try{
-                    BufferedReader in = new BufferedReader(new FileReader(ListarDisciplinas.this.dirFiles[i]));
-                    StringBuilder text = new StringBuilder();
-                    String line;
-                    while ((line = in.readLine()) != null) {
-                        text.append(line);
-                        text.append('\n');
-                    }
-                    in.close();
-                    fileDialog.setMessage(text);
-                }catch(Exception ex){
-                    fileDialog.setMessage("Erro ao carregar arquivo: "+ex.getLocalizedMessage());
-                }
-                fileDialog.setNeutralButton("Fechar", null);
-                fileDialog.show();
-
+                i++;
                 Intent intent = new Intent(getApplicationContext(), DetalhesActivity.class);
                 intent.putExtra("file", i);
                 startActivity(intent);
@@ -143,7 +125,7 @@ public class    ListarDisciplinas extends AppCompatActivity {
 
         try{
             output = openFileOutput(filename, Context.MODE_PRIVATE);
-            output.write(("Nome da disciplina: " + disc.nome + "\n").getBytes());
+
             output.close();
         }catch(Exception ex){
             Toast.makeText(this,"Erro ao gravar arquivo: " + ex.getLocalizedMessage(),Toast.LENGTH_LONG).show();
