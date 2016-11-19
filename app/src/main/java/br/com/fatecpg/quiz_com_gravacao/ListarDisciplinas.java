@@ -59,6 +59,10 @@ public class    ListarDisciplinas extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        carregaList();
+    }
+
+    public void carregaList(){
         ArrayList<String> files = new ArrayList<>();
         File dir = getFilesDir();
         dirFiles = dir.listFiles();
@@ -71,7 +75,6 @@ public class    ListarDisciplinas extends AppCompatActivity {
         ListView list = (ListView)findViewById(R.id.disciplinas);
         list.setAdapter(aa);
     }
-
 
 
     public void iniciarCadastro() {
@@ -127,12 +130,9 @@ public class    ListarDisciplinas extends AppCompatActivity {
             output = openFileOutput(filename, Context.MODE_PRIVATE);
 
             output.close();
+            carregaList();
         }catch(Exception ex){
             Toast.makeText(this,"Erro ao gravar arquivo: " + ex.getLocalizedMessage(),Toast.LENGTH_LONG).show();
         }
-
-        Intent i = new Intent(getApplicationContext(), DetalhesActivity.class);
-        i.putExtra("nome", filename);
-        startActivity(i);
     }
 }

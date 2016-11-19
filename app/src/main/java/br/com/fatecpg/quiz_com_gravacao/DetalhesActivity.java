@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 public class DetalhesActivity extends AppCompatActivity {
 
-    private float media = 0;
     File[] dirFiles;
     String filename;
     int i=0;
@@ -57,6 +56,11 @@ public class DetalhesActivity extends AppCompatActivity {
         }
     }
 
+    public String getRbNota(int rbId){
+        RadioButton rb = (RadioButton) findViewById(rbId);
+        return rb.getText().toString().replace("P1: ","").replace("P2: ","").replace("TP: ","");
+    }
+
     public void setRbText(int rbId, String nota){
         RadioButton rb = (RadioButton) findViewById(rbId);
         rb.setText(nota);
@@ -85,7 +89,7 @@ public class DetalhesActivity extends AppCompatActivity {
             BufferedReader lerArq = new BufferedReader(new FileReader(dirFiles[i]));
             String line;
             while ((line = lerArq.readLine()) != null) {
-                Toast.makeText(this, "li: "+ line, Toast.LENGTH_LONG).show();
+
 
                 if(line.substring(0,2).equals("P1")){
                     setRbText(R.id.rbP1, line);
@@ -97,28 +101,20 @@ public class DetalhesActivity extends AppCompatActivity {
                     setRbText(R.id.rbTP, line);
                 }
             }
+            calcularMedia();
             lerArq.close();
         }catch (Exception ex){
-
+            System.out.println("erro: " + ex.getMessage());
         }
-
-        /*
-        setRbText(R.id.rbP1,pref.getFloat(getNomeDisciplina()+"_P1", 0));
-        setRbText(R.id.rbP2,pref.getFloat(getNomeDisciplina()+"_P2", 0));
-        setRbText(R.id.rbTP,pref.getFloat(getNomeDisciplina()+"_TP", 0));
-*/
     }
 
     public void abrePopup(final String tipoNota){
         final TextView tvDisciplina = (TextView) findViewById(R.id.tvDiciplina);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
-        // set title
         alertDialogBuilder.setTitle(tipoNota);
 
         final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        // set dialog message
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
         alertDialogBuilder
                 .setMessage("Digite a nota:")
                 .setCancelable(false)
@@ -131,13 +127,9 @@ public class DetalhesActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancelar",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
-                        // if this button is clicked, just close
-                        // the dialog box and do nothing
                         dialog.cancel();
                     }
                 });
-
-        // show it
         alertDialogBuilder.show();
 
     }
@@ -147,15 +139,10 @@ public class DetalhesActivity extends AppCompatActivity {
     }
 
     public void salvar(String nomeDisciplina, String tipoNota,String nota){
-        /*SharedPreferences pref = this.getSharedPreferences("br.com.fatecpg.quiz", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putFloat(nomeDisciplina+"_"+tipoNota, Float.parseFloat(nota.replace(",", ".")));
-        editor.commit();
-        */
         FileOutputStream output;
 
         try{
-            output = openFileOutput(filename, Context.MODE_PRIVATE);
+            output = openFileOutput(filename, Context.MODE_APPEND);
 
 
             output.write((tipoNota+": " + nota + "\n").getBytes());
@@ -167,17 +154,37 @@ public class DetalhesActivity extends AppCompatActivity {
         }
     }
 
-    public float calcular(float add, float remover){
-        if(media != 0 ){
-            media = (media - remover) + add;
-        }
-        return media;
+    public void calcularMedia(){
+        float media = 0;
+        float p1 = Integer.parseInt(getRbNota(R.id.rbP1));
+        float p2 = Integer.parseInt(getRbNota(R.id.rbP2));
+        float tp = Integer.parseInt(getRbNota(R.id.rbTP));
+        media = (p1+p2+tp)/3;
+        TextView tv = (TextView) findViewById(R.id.media);
+        tv.setText("Media: "+String.valueOf(media));
     }
 
     public void excluirDisciplina(View view){
-        SharedPreferences pref = this.getSharedPreferences("br.com.fatecpg.quiz", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.remove("");
+        final TextView tvDisciplina = (TextView) findViewById(R.id.tvDiciplina);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(tvDisciplina.getText().toString());
+        alertDialogBuilder
+                .setMessage("Tem certeza que deseja excluir essa disciplina?")
+                .setCancelable(false)
+                .setPositiveButton("Sim",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Context context = getApplicationContext();
+                        context.deleteFile(filename);
+                        finish();
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("Não",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                });
+        alertDialogBuilder.show();
     }
 
     public void voltar(View view){
