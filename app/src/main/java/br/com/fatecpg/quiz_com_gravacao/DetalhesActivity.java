@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -155,6 +156,7 @@ public class DetalhesActivity extends AppCompatActivity {
     }
 
     public void calcularMedia(){
+        String status;
         float media = 0;
         float p1 = Integer.parseInt(getRbNota(R.id.rbP1));
         float p2 = Integer.parseInt(getRbNota(R.id.rbP2));
@@ -162,6 +164,22 @@ public class DetalhesActivity extends AppCompatActivity {
         media = (p1+p2+tp)/3;
         TextView tv = (TextView) findViewById(R.id.media);
         tv.setText("Media: "+String.valueOf(media));
+
+        TextView st = (TextView) findViewById(R.id.status);
+
+        if (media >= 6){
+
+            status = "Aprovado";
+            st.setTextColor(Color.parseColor("#00FF05"));
+        }
+
+        else{
+            status = "Reprovado";
+            st.setTextColor(Color.parseColor("#FF0000"));
+        }
+
+
+        st.setText(String.valueOf(status));
     }
 
     public void excluirDisciplina(View view){
