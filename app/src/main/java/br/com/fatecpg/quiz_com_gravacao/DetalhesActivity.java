@@ -110,6 +110,7 @@ public class DetalhesActivity extends AppCompatActivity {
     }
 
     public void abrePopup(final String tipoNota){
+        final Context context;
         final TextView tvDisciplina = (TextView) findViewById(R.id.tvDiciplina);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(tipoNota);
@@ -122,8 +123,20 @@ public class DetalhesActivity extends AppCompatActivity {
                 .setView(input)
                 .setPositiveButton("Salvar",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        salvar(tvDisciplina.getText().toString() , tipoNota, input.getText().toString());
-                        dialog.cancel();
+
+
+                        float valid = Float.parseFloat(input.getText().toString());
+
+                        if ( valid < 0 || valid > 10){
+                            input.setError("Preencha todos os campos com valores de 0 á 10!");
+                            input.requestFocus();
+                        }
+                        else{
+                            salvar(tvDisciplina.getText().toString() , tipoNota, input.getText().toString());
+                            dialog.cancel();
+                        }
+                        /*salvar(tvDisciplina.getText().toString() , tipoNota, input.getText().toString());
+                        dialog.cancel();*/
                     }
                 })
                 .setNegativeButton("Cancelar",new DialogInterface.OnClickListener() {
