@@ -110,7 +110,6 @@ public class DetalhesActivity extends AppCompatActivity {
     }
 
     public void abrePopup(final String tipoNota){
-        final Context context;
         final TextView tvDisciplina = (TextView) findViewById(R.id.tvDiciplina);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(tipoNota);
@@ -118,25 +117,30 @@ public class DetalhesActivity extends AppCompatActivity {
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         alertDialogBuilder
-                .setMessage("Digite a nota:")
+                .setMessage("Digite a nota de 0 a 10:")
                 .setCancelable(false)
                 .setView(input)
                 .setPositiveButton("Salvar",new DialogInterface.OnClickListener() {
+
+
                     public void onClick(DialogInterface dialog, int id) {
+                        float valid = 0;
+
+                        try{
+                             valid = Float.parseFloat(input.getText().toString());
+                        }catch (Exception ex){valid = 0;}
 
 
-                        float valid = Float.parseFloat(input.getText().toString());
 
-                        if ( valid < 0 || valid > 10){
-                            input.setError("Preencha todos os campos com valores de 0 á 10!");
-                            input.requestFocus();
+
+                        if ( (valid < 0 || valid > 10 || input.getText().toString().isEmpty())){
+                            abrePopup(tipoNota);
                         }
                         else{
                             salvar(tvDisciplina.getText().toString() , tipoNota, input.getText().toString());
-                            dialog.cancel();
                         }
-                        /*salvar(tvDisciplina.getText().toString() , tipoNota, input.getText().toString());
-                        dialog.cancel();*/
+                        dialog.cancel();
+
                     }
                 })
                 .setNegativeButton("Cancelar",new DialogInterface.OnClickListener() {
