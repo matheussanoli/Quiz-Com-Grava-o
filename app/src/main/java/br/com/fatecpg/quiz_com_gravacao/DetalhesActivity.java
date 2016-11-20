@@ -180,7 +180,7 @@ public class DetalhesActivity extends AppCompatActivity {
         float tp = Integer.parseInt(getRbNota(R.id.rbTP));
         media = (p1+p2+tp)/3;
         TextView tv = (TextView) findViewById(R.id.media);
-        tv.setText("Media: "+String.valueOf(media));
+        tv.setText(String.format("%.2f", media));
 
         TextView st = (TextView) findViewById(R.id.status);
 
